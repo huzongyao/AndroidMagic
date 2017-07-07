@@ -1,0 +1,45 @@
+apply plugin: 'com.android.model.application'
+
+model{
+    android {
+        compileSdkVersion 25
+        buildToolsVersion "25.0.3"
+
+        defaultConfig {
+            applicationId "com.hzy.magic.app"
+            minSdkVersion.apiLevel 15
+            targetSdkVersion.apiLevel 25
+            versionCode 1
+            versionName "1.0"
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        }
+    }
+
+    android.signingConfigs {
+        create("release") {
+            storeFile file('demokey.jks')
+            storePassword 'demokey'
+            keyAlias 'demokey'
+            keyPassword 'demokey'
+        }
+    }
+
+    android.buildTypes {
+        release {
+            useProguard true
+            proguardFiles.add(file('proguard-rules.pro'))
+            signingConfig = $("android.signingConfigs.release")
+        }
+    }
+}
+
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    testCompile 'junit:junit:4.12'
+    compile project(':libmagic')
+}
