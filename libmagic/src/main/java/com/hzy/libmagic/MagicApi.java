@@ -5,4 +5,5 @@ package com.hzy.libmagic;
  */
 
 public class MagicApi {
+    public static native int getMagicVersion();
 }

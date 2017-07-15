@@ -15,8 +15,9 @@ model{
 
         ndk {
             moduleName "magic"
-            ldLibs.addAll(["log"])
-            CFlags.addAll(['-std=c99'])
+            ldLibs.addAll(["log", "z"])
+            CFlags.addAll(['-std=c99', '-DHAVE_CONFIG_H'])
+            CFlags.add('-I' + file("src/main/jni/file"))
             abiFilters.addAll(['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'])
         }
     }
