@@ -1,12 +1,12 @@
 package com.hzy.magic.app;
 
+import android.app.ProgressDialog;
 import android.os.Environment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import com.hzy.libmagic.MagicApi;
@@ -19,12 +19,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import javax.security.auth.login.LoginException;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity
+        implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
+        Consumer<List<FileInfo>> {
 
     @Bind(R.id.main_storage_path)
     RecyclerView mPathList;
@@ -34,8 +40,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Bind(R.id.main_storage_refresh)
     SwipeRefreshLayout mSwipRefresh;
+
     private PathItemAdapter mPathAdapter;
     private FileItemAdapter mFileAdapter;
+    private String mCurPath;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,23 +52,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initUI();
-        initMagicFromAssets();
-        loadPathInfo(Environment.getExternalStorageDirectory().getPath());
+        loadInitPath();
     }
 
     private void initUI() {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setTitle("Please Wait...");
         mPathList.setAdapter(mPathAdapter = new PathItemAdapter(this, this));
         mPathList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mFileList.setAdapter(mFileAdapter = new FileItemAdapter(this, this));
         mFileList.setLayoutManager(new LinearLayoutManager(this));
+        mSwipRefresh.setOnRefreshListener(this);
     }
 
-    private void loadPathInfo(String path) {
-        List<FileInfo> infoList = FileUtils.getInfoListFromPath(path);
-        mFileAdapter.setDataList(infoList);
-        mPathAdapter.setPathView(path);
-        mPathList.scrollToPosition(mPathAdapter.getItemCount() - 1);
-        mFileList.smoothScrollToPosition(0);
+    private void loadInitPath() {
+        final String path = Environment.getExternalStorageDirectory().getPath();
+        Observable.create(new ObservableOnSubscribe<List<FileInfo>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<FileInfo>> e) throws Exception {
+                if (initMagicFromAssets()) {
+                    List<FileInfo> infoList = FileUtils.getInfoListFromPath(path);
+                    mCurPath = path;
+                    e.onNext(infoList);
+                }
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this);
+    }
+
+    private void loadPathInfo(final String path) {
+        Observable.create(new ObservableOnSubscribe<List<FileInfo>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<FileInfo>> e) throws Exception {
+                List<FileInfo> infoList = FileUtils.getInfoListFromPath(path);
+                mCurPath = path;
+                e.onNext(infoList);
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this);
     }
 
     @Override
@@ -68,30 +99,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MagicApi.close();
     }
 
-    private void initMagicFromAssets() {
+    private boolean initMagicFromAssets() {
         try {
             InputStream inputStream = getAssets().open("magic.mgc");
             int length = inputStream.available();
             byte[] buffer = new byte[length];
             if (inputStream.read(buffer) > 0) {
-                MagicApi.loadFromBytes(buffer);
+                return MagicApi.loadFromBytes(buffer) == 0;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     @Override
     public void onClick(View v) {
         if (v.getTag() instanceof String) {
+            mProgressDialog.show();
             loadPathInfo((String) v.getTag());
         } else {
             FileInfo info = (FileInfo) v.getTag();
             FileInfo.FileType type = info.getFileType();
             if (type == FileInfo.FileType.folderEmpty
                     || type == FileInfo.FileType.folderFull) {
+                mProgressDialog.show();
                 loadPathInfo(info.getFilePath());
             }
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        loadPathInfo(mCurPath);
+    }
+
+    @Override
+    public void accept(List<FileInfo> fileInfos) throws Exception {
+        mFileAdapter.setDataList(fileInfos);
+        mPathAdapter.setPathView(mCurPath);
+        mPathList.scrollToPosition(mPathAdapter.getItemCount() - 1);
+        mFileList.smoothScrollToPosition(0);
+        mSwipRefresh.setRefreshing(false);
+        mProgressDialog.dismiss();
     }
 }
