@@ -45,8 +45,17 @@ public class FileItemAdapter extends RecyclerView.Adapter<FileItemAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         FileInfo item = mFileInfoList.get(position);
         int iconId = R.drawable.icon_unknown;
+        switch (item.getFileType()) {
+            case folderEmpty:
+                iconId = R.drawable.icon_folder_empty;
+                break;
+            case folderFull:
+                iconId = R.drawable.icon_folder_full;
+                break;
+        }
         holder.itemView.setTag(item);
         holder.fileName.setText(item.getFileName());
+        holder.magicInfo.setText(item.getMagicInfo());
         holder.icon.setImageResource(iconId);
     }
 
@@ -67,6 +76,9 @@ public class FileItemAdapter extends RecyclerView.Adapter<FileItemAdapter.ViewHo
 
         @Bind(R.id.file_item_name)
         TextView fileName;
+
+        @Bind(R.id.file_item_magic)
+        TextView magicInfo;
 
         public ViewHolder(View itemView) {
             super(itemView);

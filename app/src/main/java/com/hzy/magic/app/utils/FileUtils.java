@@ -1,5 +1,6 @@
 package com.hzy.magic.app.utils;
 
+import com.hzy.libmagic.MagicApi;
 import com.hzy.magic.app.bean.FileInfo;
 
 import java.io.File;
@@ -15,7 +16,18 @@ import java.util.List;
 public class FileUtils {
     public static FileInfo getFileInfoFromPath(String filePath) {
         FileInfo info = new FileInfo();
+        info.setFileType(FileInfo.FileType.fileKnown);
         File file = new File(filePath);
+        if (file.isDirectory()) {
+            File[] subFiles = file.listFiles();
+            if (subFiles != null && subFiles.length > 0) {
+                info.setFileType(FileInfo.FileType.folderFull);
+            } else {
+                info.setFileType(FileInfo.FileType.folderEmpty);
+            }
+        }
+        String magicInfo = MagicApi.magicFile(filePath);
+        info.setMagicInfo(magicInfo);
         info.setFileName(file.getName());
         info.setFilePath(file.getAbsolutePath());
         return info;
@@ -24,7 +36,7 @@ public class FileUtils {
     public static List<FileInfo> getInfoListFromPath(String path) {
         List<FileInfo> fileInfos = new ArrayList<>();
         File folder = new File(path);
-        if (folder.exists() && folder.isDirectory() && folder.canRead()) {
+        if (folder.exists() && folder.isDirectory()) {
             File[] fileNames = folder.listFiles();
             if (fileNames != null) {
                 Arrays.sort(fileNames, new FileComparator());

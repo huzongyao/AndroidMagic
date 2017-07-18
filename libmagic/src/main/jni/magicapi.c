@@ -1,6 +1,7 @@
 #include <jni.h>
 #include <magic.h>
 #include <file.h>
+#include "ndkhelper.h"
 
 struct magic_set *g_magic;
 
@@ -9,10 +10,12 @@ static void ensure_open() {
         magic_close(g_magic);
     }
     g_magic = magic_open(MAGIC_MIME_TYPE);
+    LOGD("magic open [0x%x]!", (int)g_magic);
 }
 
 static void ensure_close() {
     if (g_magic != NULL) {
+        LOGD("magic open [0x%x]!", (int)g_magic);
         magic_close(g_magic);
         g_magic = NULL;
     }
@@ -34,8 +37,9 @@ Java_com_hzy_libmagic_MagicApi_loadFromFile(JNIEnv *env, jclass type, jstring ma
 
 JNIEXPORT jint JNICALL
 Java_com_hzy_libmagic_MagicApi_loadFromBytes(JNIEnv *env, jclass type, jbyteArray magicBytes_) {
-    jsize bufferLength = ((*env)->GetArrayLength(env, magicBytes_));
-    jbyte *cBuffer = malloc((size_t) bufferLength);
+    jsize bufferLength = (*env)->GetArrayLength(env, magicBytes_);
+    LOGD("malloc buffer size[0x%x]!", bufferLength);
+    jbyte *cBuffer = malloc((size_t) bufferLength * sizeof(jbyte));
     (*env)->GetByteArrayRegion(env, magicBytes_, 0, bufferLength, cBuffer);
     ensure_open();
     int ret = magic_load_buffers(g_magic, (void **) &cBuffer, (size_t *) &bufferLength, 1);

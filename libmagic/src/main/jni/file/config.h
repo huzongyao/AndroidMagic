@@ -109,7 +109,7 @@
 #define HAVE_MMAP 1
 
 /* Define to 1 if you have the `newlocale' function. */
-#define HAVE_NEWLOCALE 1
+//#define HAVE_NEWLOCALE 1
 
 /* Define to 1 if you have the `pread' function. */
 #define HAVE_PREAD 1
@@ -118,7 +118,7 @@
 #define HAVE_SETLOCALE 1
 
 /* Define to 1 if you have the <signal.h> header file. */
-#define HAVE_SIGNAL_H 1
+//#define HAVE_SIGNAL_H 1
 
 /* Have sig_t type */
 #define HAVE_SIG_T 1
@@ -154,7 +154,7 @@
 #define HAVE_STRNDUP 1
 
 /* Define to 1 if you have the `strtof' function. */
-#define HAVE_STRTOF 1
+//#define HAVE_STRTOF 1
 
 /* Define to 1 if you have the `strtoul' function. */
 #define HAVE_STRTOUL 1

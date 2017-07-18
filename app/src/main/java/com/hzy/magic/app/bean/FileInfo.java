@@ -7,10 +7,8 @@ package com.hzy.magic.app.bean;
 public class FileInfo {
     private String fileName;
     private String filePath;
-    private boolean isFolder;
-
-    public FileInfo() {
-    }
+    private String magicInfo;
+    private FileType fileType;
 
     public String getFileName() {
         return fileName;
@@ -18,6 +16,14 @@ public class FileInfo {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public String getMagicInfo() {
+        return magicInfo;
+    }
+
+    public void setMagicInfo(String magicInfo) {
+        this.magicInfo = magicInfo;
     }
 
     public String getFilePath() {
@@ -28,12 +34,17 @@ public class FileInfo {
         this.filePath = filePath;
     }
 
-    public boolean isFolder() {
-        return isFolder;
+    public FileType getFileType() {
+        return fileType;
     }
 
-    public void setFolder(boolean folder) {
-        isFolder = folder;
+    public void setFileType(FileType fileType) {
+        this.fileType = fileType;
     }
 
+    public enum FileType {
+        folderFull,
+        folderEmpty,
+        fileKnown
+    }
 }
