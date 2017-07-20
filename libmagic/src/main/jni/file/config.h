@@ -55,7 +55,7 @@
 #define HAVE_FSEEKO 1
 
 /* Define to 1 if you have the `getline' function. */
-#define HAVE_GETLINE 1
+//#define HAVE_GETLINE 1
 
 /* Define to 1 if you have the <getopt.h> header file. */
 #define HAVE_GETOPT_H 1
@@ -118,7 +118,7 @@
 #define HAVE_SETLOCALE 1
 
 /* Define to 1 if you have the <signal.h> header file. */
-//#define HAVE_SIGNAL_H 1
+#define HAVE_SIGNAL_H 1
 
 /* Have sig_t type */
 #define HAVE_SIG_T 1
@@ -154,7 +154,7 @@
 #define HAVE_STRNDUP 1
 
 /* Define to 1 if you have the `strtof' function. */
-//#define HAVE_STRTOF 1
+#define HAVE_STRTOF 1
 
 /* Define to 1 if you have the `strtoul' function. */
 #define HAVE_STRTOUL 1
@@ -248,7 +248,7 @@
 #define HAVE_WORKING_VFORK 1
 
 /* Define to 1 if you have the <xlocale.h> header file. */
-#define HAVE_XLOCALE_H 1
+//#define HAVE_XLOCALE_H 1
 
 /* Define to 1 if you have the <zlib.h> header file. */
 #define HAVE_ZLIB_H 1

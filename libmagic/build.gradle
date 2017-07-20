@@ -15,6 +15,7 @@ model {
 
         ndk {
             moduleName "magic"
+            platformVersion 18
             ldLibs.addAll(["log", "z"])
             CFlags.addAll(['-std=c99', '-DHAVE_CONFIG_H'])
             CFlags.add('-I' + file("src/main/jni/file"))
