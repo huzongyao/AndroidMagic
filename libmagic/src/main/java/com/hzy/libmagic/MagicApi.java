@@ -34,6 +34,10 @@ public class MagicApi {
 
     public static native int getMagicVersion();
 
+    public static native String getVersionName();
+
+    public static native String getPackageString();
+
     public static native int loadFromFile(String magicPath, int flag);
 
     public static native int loadFromBytes(byte[] magicBytes, int flag);

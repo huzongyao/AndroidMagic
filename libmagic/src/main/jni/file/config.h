@@ -55,7 +55,7 @@
 #define HAVE_FSEEKO 1
 
 /* Define to 1 if you have the `getline' function. */
-//#define HAVE_GETLINE 1
+#define HAVE_GETLINE 1
 
 /* Define to 1 if you have the <getopt.h> header file. */
 #define HAVE_GETOPT_H 1
@@ -253,8 +253,7 @@
 /* Define to 1 if you have the <zlib.h> header file. */
 #define HAVE_ZLIB_H 1
 
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
 #define LT_OBJDIR ".libs/"
 
 /* Define to 1 if `major', `minor', and `makedev' are declared in <mkdev.h>.
@@ -275,7 +274,7 @@
 #define PACKAGE_NAME "file"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "file 5.31"
+#define PACKAGE_STRING "file 5.32"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "file"
@@ -284,7 +283,7 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "5.31"
+#define PACKAGE_VERSION "5.32"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
@@ -315,7 +314,7 @@
 
 
 /* Version number of package */
-#define VERSION "5.31"
+#define VERSION "5.32"
 
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */

@@ -1,6 +1,7 @@
 #include <jni.h>
 #include <magic.h>
 #include <file.h>
+#include <config.h>
 #include "ndkhelper.h"
 
 struct magic_set *g_magic;
@@ -61,4 +62,14 @@ JNIEXPORT jint JNICALL
 Java_com_hzy_libmagic_MagicApi_close(JNIEnv *env, jclass type) {
     ensure_close();
     return 0;
+}
+
+JNIEXPORT jstring JNICALL
+Java_com_hzy_libmagic_MagicApi_getVersionName(JNIEnv *env, jclass type) {
+    return (*env)->NewStringUTF(env, VERSION);
+}
+
+JNIEXPORT jstring JNICALL
+Java_com_hzy_libmagic_MagicApi_getPackageString(JNIEnv *env, jclass type) {
+    return (*env)->NewStringUTF(env, PACKAGE_STRING);
 }

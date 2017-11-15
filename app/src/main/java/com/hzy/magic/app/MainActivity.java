@@ -1,12 +1,15 @@
 package com.hzy.magic.app;
 
 import android.app.ProgressDialog;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.hzy.libmagic.MagicApi;
@@ -45,6 +48,7 @@ public class MainActivity extends AppCompatActivity
     private FileItemAdapter mFileAdapter;
     private String mCurPath;
     private ProgressDialog mProgressDialog;
+    private AlertDialog mAboutDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +103,21 @@ public class MainActivity extends AppCompatActivity
         MagicApi.close();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_about) {
+            showAboutDialog();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private boolean initMagicFromAssets() {
         try {
             InputStream inputStream = getAssets().open("magic.mgc");
@@ -142,5 +161,16 @@ public class MainActivity extends AppCompatActivity
         mFileList.smoothScrollToPosition(0);
         mSwipRefresh.setRefreshing(false);
         mProgressDialog.dismiss();
+    }
+
+    private void showAboutDialog() {
+        if (mAboutDialog == null) {
+            String packageString = MagicApi.getPackageString();
+            mAboutDialog = new AlertDialog.Builder(this)
+                    .setTitle(R.string.app_name)
+                    .setMessage(packageString)
+                    .create();
+        }
+        mAboutDialog.show();
     }
 }
