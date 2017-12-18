@@ -7,7 +7,7 @@
 
 #include <jni.h>
 
-#ifdef JNI_LOG
+#ifdef NATIVE_LOG
 #define LOG_TAG "NATIVE.LOG"
 #include <android/log.h>
 
