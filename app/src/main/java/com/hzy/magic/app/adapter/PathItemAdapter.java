@@ -12,7 +12,7 @@ import com.hzy.magic.app.R;
 
 import java.io.File;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -63,7 +63,7 @@ public class PathItemAdapter extends RecyclerView.Adapter<PathItemAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.path_list_text)
+        @BindView(R.id.path_list_text)
         TextView pathText;
 
         public ViewHolder(View itemView) {

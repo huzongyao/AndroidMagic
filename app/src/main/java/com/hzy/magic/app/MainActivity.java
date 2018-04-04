@@ -1,8 +1,12 @@
 package com.hzy.magic.app;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -35,14 +39,14 @@ public class MainActivity extends AppCompatActivity
         implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener,
         Consumer<List<FileInfo>> {
 
-    @Bind(R.id.main_storage_path)
+    @BindView(R.id.main_storage_path)
     RecyclerView mPathList;
 
-    @Bind(R.id.main_storage_list)
+    @BindView(R.id.main_storage_list)
     RecyclerView mFileList;
 
-    @Bind(R.id.main_storage_refresh)
-    SwipeRefreshLayout mSwipRefresh;
+    @BindView(R.id.main_storage_refresh)
+    SwipeRefreshLayout mSwipeRefresh;
 
     private PathItemAdapter mPathAdapter;
     private FileItemAdapter mFileAdapter;
@@ -50,13 +54,22 @@ public class MainActivity extends AppCompatActivity
     private ProgressDialog mProgressDialog;
     private AlertDialog mAboutDialog;
 
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initUI();
-        loadInitPath();
+        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 203);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 203) {
+            loadInitPath();
+        }
     }
 
     private void initUI() {
@@ -67,7 +80,7 @@ public class MainActivity extends AppCompatActivity
         mPathList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mFileList.setAdapter(mFileAdapter = new FileItemAdapter(this, this));
         mFileList.setLayoutManager(new LinearLayoutManager(this));
-        mSwipRefresh.setOnRefreshListener(this);
+        mSwipeRefresh.setOnRefreshListener(this);
     }
 
     private void loadInitPath() {
@@ -111,9 +124,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_about) {
-            showAboutDialog();
-            return true;
+        switch (item.getItemId()) {
+            case R.id.menu_about:
+                showAboutDialog();
+                return true;
+            case R.id.menu_home:
+                loadInitPath();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -159,7 +176,7 @@ public class MainActivity extends AppCompatActivity
         mPathAdapter.setPathView(mCurPath);
         mPathList.scrollToPosition(mPathAdapter.getItemCount() - 1);
         mFileList.smoothScrollToPosition(0);
-        mSwipRefresh.setRefreshing(false);
+        mSwipeRefresh.setRefreshing(false);
         mProgressDialog.dismiss();
     }
 

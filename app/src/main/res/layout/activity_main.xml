@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#ccc"
-        tools:showIn="@layout/path_list_item" />
+        tools:listitem="@layout/path_list_item" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/main_storage_refresh"
@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
-            tools:showIn="@layout/storage_list_item" />
+            tools:listitem="@layout/storage_list_item" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>
