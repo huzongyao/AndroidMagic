@@ -1,4 +1,4 @@
-package com.hzy.magic.app;
+package com.hzy.magic.app.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.blankj.utilcode.util.PermissionUtils;
 import com.hzy.libmagic.MagicApi;
+import com.hzy.magic.app.R;
 import com.hzy.magic.app.adapter.FileItemAdapter;
 import com.hzy.magic.app.adapter.PathItemAdapter;
 import com.hzy.magic.app.bean.FileInfo;
@@ -29,7 +30,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -61,15 +61,18 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initUI();
-        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 203);
-    }
+        PermissionUtils.permission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .callback(new PermissionUtils.SimpleCallback() {
+                    @Override
+                    public void onGranted() {
+                        loadInitPath();
+                    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 203) {
-            loadInitPath();
-        }
+                    @Override
+                    public void onDenied() {
+
+                    }
+                }).request();
     }
 
     private void initUI() {
@@ -85,27 +88,21 @@ public class MainActivity extends AppCompatActivity
 
     private void loadInitPath() {
         final String path = Environment.getExternalStorageDirectory().getPath();
-        Observable.create(new ObservableOnSubscribe<List<FileInfo>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<FileInfo>> e) throws Exception {
-                if (initMagicFromAssets()) {
-                    List<FileInfo> infoList = FileUtils.getInfoListFromPath(path);
-                    mCurPath = path;
-                    e.onNext(infoList);
-                }
+        Observable.create((ObservableOnSubscribe<List<FileInfo>>) e -> {
+            if (initMagicFromAssets()) {
+                List<FileInfo> infoList = FileUtils.getInfoListFromPath(path);
+                mCurPath = path;
+                e.onNext(infoList);
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);
     }
 
     private void loadPathInfo(final String path) {
-        Observable.create(new ObservableOnSubscribe<List<FileInfo>>() {
-            @Override
-            public void subscribe(ObservableEmitter<List<FileInfo>> e) throws Exception {
-                List<FileInfo> infoList = FileUtils.getInfoListFromPath(path);
-                mCurPath = path;
-                e.onNext(infoList);
-            }
+        Observable.create((ObservableOnSubscribe<List<FileInfo>>) e -> {
+            List<FileInfo> infoList = FileUtils.getInfoListFromPath(path);
+            mCurPath = path;
+            e.onNext(infoList);
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this);
     }

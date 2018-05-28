@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.hzy.magic.app.R;
 import com.hzy.magic.app.bean.FileInfo;
 
@@ -44,13 +43,13 @@ public class FileItemAdapter extends RecyclerView.Adapter<FileItemAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         FileInfo item = mFileInfoList.get(position);
-        int iconId = R.drawable.icon_unknown;
+        int iconId = R.drawable.ic_file_unknown;
         switch (item.getFileType()) {
             case folderEmpty:
-                iconId = R.drawable.icon_folder_empty;
+                iconId = R.drawable.ic_floder_empty;
                 break;
             case folderFull:
-                iconId = R.drawable.icon_folder_full;
+                iconId = R.drawable.ic_folder_full;
                 break;
         }
         holder.itemView.setTag(item);

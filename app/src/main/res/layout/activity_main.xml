@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fff"
+    android:background="#EBEFF2"
     android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/main_storage_path"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ccc"
+        android:background="#CCBCBC"
         tools:listitem="@layout/path_list_item" />
 
     <android.support.v4.widget.SwipeRefreshLayout

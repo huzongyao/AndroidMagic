@@ -2,6 +2,7 @@
 #include <magic.h>
 #include <file.h>
 #include <config.h>
+#include <malloc.h>
 #include "ndkhelper.h"
 
 struct magic_set *g_magic;
