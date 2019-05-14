@@ -35,7 +35,8 @@ public class FileItemAdapter extends RecyclerView.Adapter<FileItemAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View rootView = LayoutInflater.from(mActivity).inflate(R.layout.storage_list_item, parent, false);
+        View rootView = LayoutInflater.from(mActivity)
+                .inflate(R.layout.storage_list_item, parent, false);
         rootView.setOnClickListener(mItemClickListener);
         return new ViewHolder(rootView);
     }

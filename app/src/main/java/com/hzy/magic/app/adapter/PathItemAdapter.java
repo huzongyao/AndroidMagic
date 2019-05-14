@@ -1,6 +1,7 @@
 package com.hzy.magic.app.adapter;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,20 +40,21 @@ public class PathItemAdapter extends RecyclerView.Adapter<PathItemAdapter.ViewHo
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View rootView = LayoutInflater.from(mActivity).inflate(R.layout.path_list_item, parent, false);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View rootView = LayoutInflater.from(mActivity)
+                .inflate(R.layout.path_list_item, parent, false);
         rootView.setOnClickListener(mItemClickListener);
         return new ViewHolder(rootView);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String item = mPathStringList[position];
-        String curPath = "";
+        StringBuilder curPath = new StringBuilder();
         for (int i = 0; i < position + 1; i++) {
-            curPath += mPathStringList[i] + File.separator;
+            curPath.append(mPathStringList[i]).append(File.separator);
         }
-        holder.itemView.setTag(curPath);
+        holder.itemView.setTag(curPath.toString());
         holder.pathText.setText(item);
     }
 

@@ -1,6 +1,6 @@
 package com.hzy.magic.app.activity;
 
-import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.os.Build;
@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.hzy.libmagic.MagicApi;
 import com.hzy.magic.app.R;
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initUI();
-        PermissionUtils.permission(Manifest.permission.READ_EXTERNAL_STORAGE)
+        PermissionUtils.permission(PermissionConstants.STORAGE)
                 .callback(new PermissionUtils.SimpleCallback() {
                     @Override
                     public void onGranted() {
@@ -80,12 +81,14 @@ public class MainActivity extends AppCompatActivity
         mProgressDialog.setCancelable(false);
         mProgressDialog.setTitle("Please Wait...");
         mPathList.setAdapter(mPathAdapter = new PathItemAdapter(this, this));
-        mPathList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mPathList.setLayoutManager(new LinearLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL, false));
         mFileList.setAdapter(mFileAdapter = new FileItemAdapter(this, this));
         mFileList.setLayoutManager(new LinearLayoutManager(this));
         mSwipeRefresh.setOnRefreshListener(this);
     }
 
+    @SuppressLint("CheckResult")
     private void loadInitPath() {
         final String path = Environment.getExternalStorageDirectory().getPath();
         Observable.create((ObservableOnSubscribe<List<FileInfo>>) e -> {
@@ -98,6 +101,7 @@ public class MainActivity extends AppCompatActivity
                 .subscribe(this);
     }
 
+    @SuppressLint("CheckResult")
     private void loadPathInfo(final String path) {
         Observable.create((ObservableOnSubscribe<List<FileInfo>>) e -> {
             List<FileInfo> infoList = FileUtils.getInfoListFromPath(path);
@@ -130,6 +134,11 @@ public class MainActivity extends AppCompatActivity
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     private boolean initMagicFromAssets() {
@@ -168,7 +177,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void accept(List<FileInfo> fileInfos) throws Exception {
+    public void accept(List<FileInfo> fileInfos) {
         mFileAdapter.setDataList(fileInfos);
         mPathAdapter.setPathView(mCurPath);
         mPathList.scrollToPosition(mPathAdapter.getItemCount() - 1);
