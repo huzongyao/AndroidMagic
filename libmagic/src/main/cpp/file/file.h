@@ -27,7 +27,7 @@
  */
 /*
  * file.h - definitions for file(1) program
- * @(#)$File: file.h,v 1.202 2019/02/18 17:46:56 christos Exp $
+ * @(#)$File: file.h,v 1.206 2019/05/07 02:27:11 christos Exp $
  */
 
 #ifndef __file_h__
@@ -454,12 +454,13 @@ protected const char *file_fmttime(uint64_t, int, char *);
 protected struct magic_set *file_ms_alloc(int);
 protected void file_ms_free(struct magic_set *);
 protected int file_default(struct magic_set *, size_t);
-protected int file_buffer(struct magic_set *, int, const char *, const void *,
-    size_t);
+protected int file_buffer(struct magic_set *, int, struct stat *, const char *,
+    const void *, size_t);
 protected int file_fsmagic(struct magic_set *, const char *, struct stat *);
 protected int file_pipe2file(struct magic_set *, int, const void *, size_t);
 protected int file_vprintf(struct magic_set *, const char *, va_list)
     __attribute__((__format__(__printf__, 2, 0)));
+protected int file_separator(struct magic_set *);
 protected size_t file_printedlen(const struct magic_set *);
 protected int file_replace(struct magic_set *, const char *, const char *);
 protected int file_printf(struct magic_set *, const char *, ...)
@@ -512,7 +513,8 @@ protected int file_os2_apptype(struct magic_set *, const char *, const void *,
     size_t);
 #endif /* __EMX__ */
 
-protected void buffer_init(struct buffer *, int, const void *, size_t);
+protected void buffer_init(struct buffer *, int, const struct stat *,
+    const void *, size_t);
 protected void buffer_fini(struct buffer *);
 protected int buffer_fill(const struct buffer *);
 
@@ -551,17 +553,6 @@ protected char  *file_pop_buffer(struct magic_set *, file_pushbuf_t *);
 #ifndef COMPILE_ONLY
 extern const char *file_names[];
 extern const size_t file_nnames;
-#endif
-
-#ifndef HAVE_STRERROR
-extern int sys_nerr;
-extern char *sys_errlist[];
-#define strerror(e) \
-	(((e) >= 0 && (e) < sys_nerr) ? sys_errlist[(e)] : "Unknown error")
-#endif
-
-#ifndef HAVE_STRTOUL
-#define strtoul(a, b, c)	strtol(a, b, c)
 #endif
 
 #ifndef HAVE_PREAD

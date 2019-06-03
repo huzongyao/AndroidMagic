@@ -32,7 +32,7 @@
 #include "file.h"
 
 #ifndef	lint
-FILE_RCSID("@(#)$File: softmagic.c,v 1.278 2019/02/20 02:35:27 christos Exp $")
+FILE_RCSID("@(#)$File: softmagic.c,v 1.286 2019/05/17 02:24:59 christos Exp $")
 #endif	/* lint */
 
 #include "magic.h"
@@ -147,7 +147,12 @@ private const char * __attribute__((__format_arg__(3)))
 file_fmtcheck(struct magic_set *ms, const char *desc, const char *def,
 	const char *file, size_t line)
 {
-	const char *ptr = fmtcheck(desc, def);
+	const char *ptr;
+
+	if (strchr(desc, '%') == NULL)
+		return desc;
+
+	ptr = fmtcheck(desc, def);
 	if (ptr == def)
 		file_magerror(ms,
 		    "%s, %" SIZE_T_FORMAT "u: format `%s' does not match"
@@ -443,8 +448,12 @@ flush:
 		if (*printed_something) {
 			firstline = 0;
 		}
-		if ((ms->flags & MAGIC_CONTINUE) == 0 && *found_match) {
+		if (*found_match) {
+		    if ((ms->flags & MAGIC_CONTINUE) == 0)
 			return *returnval; /* don't keep searching */
+		    // So that we print a separator
+		    *printed_something = 0;
+		    firstline = 0;
 		}
 		cont_level = 0;
 	}
@@ -1482,13 +1491,13 @@ msetoffset(struct magic_set *ms, struct magic *m, struct buffer *bb,
 		}
 		if (CAST(size_t, -m->offset) > b->elen)
 			return -1;
-		buffer_init(bb, -1, b->ebuf, b->elen);
+		buffer_init(bb, -1, NULL, b->ebuf, b->elen);
 		ms->eoffset = ms->offset = CAST(int32_t, b->elen + m->offset);
 	} else {
 		if (cont_level == 0) {
 normal:
 			// XXX: Pass real fd, then who frees bb?
-			buffer_init(bb, -1, b->fbuf, b->flen);
+			buffer_init(bb, -1, NULL, b->fbuf, b->flen);
 			ms->offset = m->offset;
 			ms->eoffset = 0;
 		} else {
@@ -2063,6 +2072,22 @@ magiccheck(struct magic_set *ms, struct magic *m)
 		slen = MIN(m->vallen, sizeof(m->value.s));
 		l = 0;
 		v = 0;
+#ifdef HAVE_MEMMEM
+		if (slen > 0 && m->str_flags == 0) {
+			const char *found;
+			idx = m->str_range + slen;
+			if (m->str_range == 0 || ms->search.s_len < idx)
+				idx = ms->search.s_len;
+			found = CAST(const char *, memmem(ms->search.s, idx,
+			    m->value.s, slen));
+			if (!found)
+				return 0;
+			idx = found - ms->search.s;
+			ms->search.offset += idx;
+			ms->search.rm_len = ms->search.s_len - idx;
+			break;
+		}
+#endif
 
 		for (idx = 0; m->str_range == 0 || idx < m->str_range; idx++) {
 			if (slen + idx > ms->search.s_len)
@@ -2291,13 +2316,11 @@ handle_annotation(struct magic_set *ms, struct magic *m, int firstline)
 private int
 print_sep(struct magic_set *ms, int firstline)
 {
-//	if (ms->flags & MAGIC_NODESC)
-//		return 0;
 	if (firstline)
 		return 0;
 	/*
 	 * we found another match
 	 * put a newline and '-' to do some simple formatting
 	 */
-	return file_printf(ms, "\n- ");
+	return file_separator(ms);
 }

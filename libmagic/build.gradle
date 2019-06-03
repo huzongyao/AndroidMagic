@@ -13,7 +13,7 @@ android {
         }
         externalNativeBuild {
             cmake {
-                arguments '-DANDROID_PLATFORM=android-21'
+                arguments '-DANDROID_PLATFORM=android-15'
             }
         }
     }
