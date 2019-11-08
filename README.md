@@ -33,10 +33,17 @@ This project is for me to learn Java, NDK, and for fun.
 
 ### About Me
  * GitHub: [https://huzongyao.github.io/](https://huzongyao.github.io/)
- * ITEye博客：[http://hzy3774.iteye.com/](http://hzy3774.iteye.com/)
- * 新浪微博: [http://weibo.com/hzy3774](http://weibo.com/hzy3774)
+ * ITEye博客：[https://hzy3774.iteye.com/](https://hzy3774.iteye.com/)
+ * 新浪微博: [https://weibo.com/hzy3774](https://weibo.com/hzy3774)
 
 ### Contact To Me
- * QQ: [377406997](http://wpa.qq.com/msgrd?v=3&uin=377406997&site=qq&menu=yes)
+ * QQ: [377406997](https://wpa.qq.com/msgrd?v=3&uin=377406997&site=qq&menu=yes)
  * Gmail: [hzy3774@gmail.com](mailto:hzy3774@gmail.com)
  * Foxmail: [hzy3774@qq.com](mailto:hzy3774@qq.com)
+ * WeChat: hzy3774
+
+ ![image](https://raw.githubusercontent.com/hzy3774/AndroidP7zip/master/misc/wechat.png)
+
+### Others
+ * 想捐助我喝杯热水(¥0.01起捐)</br>
+ ![donate](https://github.com/huzongyao/JChineseChess/blob/master/misc/donate.png?raw=true)

@@ -14,6 +14,7 @@ import java.util.List;
  */
 
 public class FileUtils {
+
     public static FileInfo getFileInfoFromPath(String filePath) {
         FileInfo info = new FileInfo();
         info.setFileType(FileInfo.FileType.fileKnown);
