@@ -1,12 +1,11 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 29
-    ndkVersion "21.0.6113669"
+    compileSdkVersion 30
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 2
         versionName "1.1.1"
         ndk {
@@ -14,7 +13,7 @@ android {
         }
         externalNativeBuild {
             cmake {
-                arguments '-DANDROID_PLATFORM=android-15'
+                arguments '-DANDROID_PLATFORM=android-21'
             }
         }
     }
@@ -31,6 +30,9 @@ android {
         cmake {
             path 'src/main/cpp/CMakeLists.txt'
         }
+        /*ndkBuild {
+            path 'src/main/cpp/Android.mk'
+        }*/
     }
 }
 

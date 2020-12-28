@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     signingConfigs {
         demokey {
@@ -14,7 +14,7 @@ android {
     defaultConfig {
         applicationId "com.hzy.magic.app"
         minSdkVersion 15
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 3
         versionName "1.1.2"
     }
@@ -43,14 +43,19 @@ android {
     lintOptions {
         abortOnError false
     }
+    dependenciesInfo {
+        includeInApk false
+        includeInBundle false
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'com.blankj:utilcode:1.25.9'
-    api 'com.jakewharton:butterknife:10.1.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'com.blankj:utilcode:1.26.0'
+    api 'com.jakewharton:butterknife:10.2.3'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
     implementation project(':libmagic')
 }
