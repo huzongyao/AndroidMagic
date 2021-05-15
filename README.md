@@ -3,7 +3,7 @@ AndroidMagic(使用LibMagic识别文件类型)
 An android project to query file info with LibMagic
 
 [![Travis](https://img.shields.io/appveyor/ci/gruntjs/grunt.svg)](https://github.com/huzongyao/AndroidMagic/releases)
-[![Travis](https://img.shields.io/badge/file-v5.37-brightgreen.svg)](https://github.com/file/file)
+[![Travis](https://img.shields.io/badge/file-v5.40-brightgreen.svg)](https://github.com/file/file)
 
 ### Introduction
 The file command is "a file type guesser", that is, a command-line tool that tells you in words
